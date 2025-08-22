@@ -1,0 +1,46 @@
+from mage_ai.io.file import FileIO
+if 'data_loader' not in globals():
+    from mage_ai.data_preparation.decorators import data_loader
+if 'test' not in globals():
+    from mage_ai.data_preparation.decorators import test
+
+
+@data_loader
+def load_data_from_file(*args, **kwargs):
+    """
+    Template for loading data from filesystem.
+    Load data from 1 file or multiple file directories.
+
+    For multiple directories, use the following:
+        FileIO().load(file_directories=['dir_1', 'dir_2'])
+
+    Docs: https://docs.mage.ai/design/data-loading#fileio
+    """
+    import requests
+    import pandas as pd
+
+    # API endpoint for yellow taxi trips (you can adjust the dataset id)
+    url = "https://data.cityofnewyork.us/resource/gkne-dk5s.json"
+
+    # Example: limit to 1000 records
+    params = {
+        "$limit": 100000
+    }
+
+    # Send GET request
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    # Convert to DataFrame
+    df = pd.DataFrame(data)
+
+    return df
+
+
+
+@test
+def test_output(output, *args) -> None:
+    """
+    Template code for testing the output of the block.
+    """
+    assert output is not None, 'The output is undefined'
